@@ -1,7 +1,33 @@
-(add-to-list 'load-path "~/.emacs.d/lisp/")
-(add-to-list 'load-path "~/.emacs.d/markdown/")
+;;;;;;;;;;;;;;
+;;  LoadPath
+;;;;;;;;;;;;;;
+
+(let ((default-directory "~/.emacs.d/"))
+  (normal-top-level-add-subdirs-to-load-path))
+
+
+;;;;;;;;;;;;
+;; CEDET
+;;;;;;;;;;;;
 
 (require 'cedet)
+
+;(semantic-load-enable-minimum-features)
+;(semantic-load-enable-code-helpers)
+;(semantic-load-enable-guady-code-helpers)
+;(semantic-load-enable-excessive-code-helpers)
+;(semantic-load-enable-semantic-debugging-helpers)
+
+
+;;;;;;;;;;;;
+;; Python
+;;;;;;;;;;;;
+
+(autoload 'python-mode "python-mode" "Python Mode." t)
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+(add-to-list 'interpreter-mode-alist '("python" . python-mode))
+(setq py-install-directory "~/.emacs.d/python/python-mode.el-6.1.3/")
+(setq pt-shell-name "python")
 
 ;;;;;;;;;;;;
 ;; Markdown
@@ -84,13 +110,38 @@
 ;; Custom Options
 ;;;;;;;;;;;;;;;;;;;
 
+;; set frame size
+(defun set-frame-size-according-to-resolution ()
+  (interactive)
+  (if window-system
+  (progn
+    ;; use 120 char wide window for largeish displays
+    ;; and smaller 80 column windows for smaller displays
+    ;; pick whatever numbers make sense for you
+    (if (> (x-display-pixel-width) 1280)
+           (add-to-list 'default-frame-alist (cons 'width 120))
+           (add-to-list 'default-frame-alist (cons 'width 80)))
+    ;; for the height, subtract a couple hundred pixels
+    ;; from the screen height (for panels, menubars and
+    ;; whatnot), then divide by the height of a char to
+    ;; get the height we want
+    (add-to-list 'default-frame-alist 
+         (cons 'height (/ (- (x-display-pixel-height) 200)
+                             (frame-char-height)))))))
+
+(set-frame-size-according-to-resolution)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(cua-mode t nil (cua-base))
+ '(global-ede-mode t)
+ '(global-linum-mode t)
  '(inhibit-startup-screen t)
+ '(make-backup-files nil)
+ '(semantic-mode t)
  '(show-paren-mode t)
  '(vc-follow-symlinks t))
 (custom-set-faces
