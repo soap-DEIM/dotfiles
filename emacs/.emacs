@@ -7,9 +7,17 @@
 
 
 ;;;;;;;;;;;;
-;; CEDET
+;; Tools
 ;;;;;;;;;;;;
 
+;; flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; Git
+(require 'git-emacs)
+(require 'git-blame)
+
+;; CEDET
 (require 'cedet)
 
 ;(semantic-load-enable-minimum-features)
@@ -18,6 +26,26 @@
 ;(semantic-load-enable-excessive-code-helpers)
 ;(semantic-load-enable-semantic-debugging-helpers)
 
+
+;;;;;;;;;;;;
+;; C++
+;;;;;;;;;;;;
+
+(c-add-style "soap" 
+	     '("stroustrup"
+	       (indent-tabs-mode . nil)        ; use spaces rather than tabs
+	       (c-basic-offset . 4)            ; indent by four spaces
+	       (c-offsets-alist . ((inline-open . 0)  ; custom indentation rules
+				   (brace-list-open . 0)
+				   (statement-case-open . +)))))
+
+(defun my-c++-mode-hook ()
+  (c-set-style "soap")        ; use my-style defined above
+  (auto-fill-mode)         
+  (c-toggle-auto-hungry-state 1))
+
+(add-hook 'c++-mode-hook 'my-c++-mode-hook)
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 ;;;;;;;;;;;;
 ;; Python
@@ -149,6 +177,7 @@
  '(make-backup-files nil)
  '(semantic-mode t)
  '(show-paren-mode t)
+ '(tab-width 4)
  '(vc-follow-symlinks t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
