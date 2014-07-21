@@ -4,7 +4,7 @@
 
 (let ((default-directory "~/.emacs.d/"))
   (normal-top-level-add-subdirs-to-load-path))
-
+(add-to-list 'load-path "~/.emacs.d/")
 
 ;;;;;;;;;;;;
 ;; Tools
@@ -26,6 +26,20 @@
 ;(semantic-load-enable-excessive-code-helpers)
 ;(semantic-load-enable-semantic-debugging-helpers)
 
+;;;;;;;;;;;;;;;
+;; Device Tree
+;;;;;;;;;;;;;;;
+(load "dts-mode.el")
+(add-to-list 'auto-mode-alist '("\\.dts\\'" . dts-mode))
+(add-to-list 'auto-mode-alist '("\\.dtsi\\'" . dts-mode))
+
+;;;;;;;;;;;;
+;; Dot
+;;;;;;;;;;;;
+(load "graphviz-dot-mode.el")
+
+(add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
+
 
 ;;;;;;;;;;;;
 ;; C++
@@ -33,18 +47,16 @@
 
 (c-add-style "soap" 
 	     '("stroustrup"
-	       (indent-tabs-mode . nil)        ; use spaces rather than tabs
 	       (c-basic-offset . 4)            ; indent by four spaces
 	       (c-offsets-alist . ((inline-open . 0)  ; custom indentation rules
 				   (brace-list-open . 0)
 				   (statement-case-open . +)))))
 
 (defun my-c++-mode-hook ()
-  (c-set-style "soap")        ; use my-style defined above
-  (auto-fill-mode)         
-  (c-toggle-auto-hungry-state 1))
-
+  (c-set-style "soap"))        ; use my-style defined above
+  
 (add-hook 'c++-mode-hook 'my-c++-mode-hook)
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 ;;;;;;;;;;;;
@@ -171,6 +183,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(cua-mode t nil (cua-base))
+ '(default-frame-alist (quote ((height . 40) (width . 85))))
+ '(flycheck-clang-language-standard "c++11")
  '(global-ede-mode t)
  '(global-linum-mode t)
  '(inhibit-startup-screen t)
